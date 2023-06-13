@@ -26,3 +26,7 @@ def presigned_url():
     if response is None:
         raise HTTPException(status_code=500, detail="Could not generate presigned url") 
     return response 
+
+@app.post("/query")
+def forward_query(item):
+    print(item)
