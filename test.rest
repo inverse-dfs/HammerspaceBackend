@@ -1,0 +1,7 @@
+POST http://127.0.0.1:8000/query HTTP/1.1
+content-type: application/json
+
+{
+    "name": "sample",
+    "description": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
