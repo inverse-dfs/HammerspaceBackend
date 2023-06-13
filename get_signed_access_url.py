@@ -28,11 +28,6 @@ def generate_url(bucket_name, object_name, expiration=3600):
 
 
 def get_presigned_access_url(object_name):
-    bucket = None   
-    try:
-        bucket = os.environ['UPLOAD_BUCKET']
-    except KeyError as e:
-        print(e)
-        return None
+    bucket = 'hammerspace-buckettest'   
     return generate_url(bucket, object_name, 3600)
     
