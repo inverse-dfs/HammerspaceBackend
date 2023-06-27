@@ -27,6 +27,6 @@ def generate_url(bucket_name, object_name, expiration=3600):
 
 
 def get_presigned_access_url(object_name):
-    bucket = 'hammerspace-buckettest'   
+    bucket = 'hammerspace-image-buckettest'   
     return generate_url(bucket, object_name, 3600)
     
