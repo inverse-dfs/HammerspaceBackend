@@ -6,7 +6,19 @@ on:
   workflow_dispatch:
 env:
   COCK: "hello"
-  SSH_PRIVATE_KEY: "-----BEGIN RSA PRIVATE KEY-----
+  SSH_PRIVATE_KEY: ""
+  REMOTE_HOST: "ec2-3-83-11-18.compute-1.amazonaws.com"
+  REMOTE_USER: "ubuntu"
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2 
+      - name: Build & Deploy      
+        run: |
+          echo '-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAhOUqC2w+wEY5LCLvF6jv0jRBM6FmrMNUUpsk7ifheFa7s6XO
 ixekynVjazP7A1LtpugQ8dJs1SjB5Tirqt/BjszhzwdXNlyeAxlzOCZQdHbr8S0L
 8v6CmSLW6nAYBfBX2AwOiFaIAZFCysIbm4VMWioI0OUCXIlD2utUixPC32yoOKyi
@@ -32,20 +44,8 @@ E7axsjCh1/qAYZvJVzchnBIbANRuq0N6iRYYPF4iO2wM8WngoD6Jxzh5jexKtPq/
 Vnmww+ECgYANVjxXVuUsXPkXTXPyT1FPXHPymZz8Lz+NonI2QQNWDgjsnxk3T1kO
 MQGmMv+Fn3tisO8/TA6aCRNcPH85bQSTTibJ28ffTgGMua03wwHbAMn8qRaajTt4
 5k9r/UvmTnloWTb8KdLHpHp1IeOm9oVhhNkrxn77SKFb+KntKsbEgg==
------END RSA PRIVATE KEY-----"
-  REMOTE_HOST: "ec2-3-83-11-18.compute-1.amazonaws.com"
-  REMOTE_USER: "ubuntu"
-jobs:
-  Deploy:
-    name: Deploy to EC2
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v2 
-      - name: Build & Deploy      
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} '
+-----END RSA PRIVATE KEY-----' > private_key && chmod 400 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@$ec2-3-83-11-18.compute-1.amazonaws.com '
 
               cd HammerspaceBackend &&
               git checkout main &&
