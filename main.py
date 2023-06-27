@@ -3,8 +3,10 @@ import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
 from get_signed_url import get_upload_url
 from get_signed_access_url import get_presigned_access_url
+from mps_handler import MPSHandler
 
 app = FastAPI()
 
@@ -33,5 +35,11 @@ class TranslationRequest(BaseModel):
 
 @app.post("/translate")
 def translation_request(item: TranslationRequest):
+    try:
+        handler = MPSHandler()
+    except KeyError as e:
+        raise HTTPException(status_code=500, detail="Unable to Access MathPixSnip API")
     presigned_url = get_presigned_access_url(item.fileid)
-    return presigned_url
+    translated = handler.GetTranslation(presigned_url)
+    response = {'translation':translated}
+    return response
