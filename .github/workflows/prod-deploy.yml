@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Deploy to Prod
         run: |
+          echo "$COCK"
           echo "$REMOTE_HOST"
           echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
           cat private_key
