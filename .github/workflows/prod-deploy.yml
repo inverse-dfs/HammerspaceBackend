@@ -17,9 +17,9 @@ jobs:
           chmod 400 githubdeploy.pem
           ssh -o StrictHostKeyChecking=no -i "githubdeploy.pem" ubuntu@ec2-3-83-11-18.compute-1.amazonaws.com '
               fuser -k 8000/tcp ;
-              cd HammerspaceBackend
-              git checkout main
-              git reset --hard
-              git pull
+              cd HammerspaceBackend &&
+              git checkout main &&
+              git reset --hard &&
+              git pull &&
               uvicorn main:app
               '
