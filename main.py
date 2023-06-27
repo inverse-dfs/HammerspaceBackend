@@ -2,6 +2,7 @@ from typing import Union
 import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 from get_signed_url import get_upload_url
 from get_signed_access_url import get_presigned_access_url
@@ -40,4 +41,5 @@ def translation_request(item: TranslationRequest):
         raise HTTPException(status_code=500, detail="Unable to Access MathPixSnip API")
     presigned_url = get_presigned_access_url(item.fileid)
     translated = handler.GetTranslation(presigned_url)
-    return translated
+    response = {'translation':translated}
+    return response

@@ -3,7 +3,7 @@ import requests
 import time    
 
 class MPSHandler:
-    def __init__(self, env_var_name="MATHPIXSNIP_KEY", endpoint=):
+    def __init__(self, env_var_name="MATHPIXSNIP_KEY"):
         self.api_key = os.environ.get(env_var_name)
         self.tmp_key = ''
         self.tmp_key_expr = 0
