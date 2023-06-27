@@ -21,6 +21,5 @@ jobs:
               git checkout main &&
               git reset --hard &&
               git pull &&
-              source ~/.bashrc &&
-              uvicorn main:app
+              /home/ubuntu/.local/bin/uvicorn main:app
               '
