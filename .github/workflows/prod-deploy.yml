@@ -16,5 +16,6 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > githubdeploy.pem
           chmod 400 githubdeploy.pem
           ssh -o StrictHostKeyChecking=no -i "githubdeploy.pem" ubuntu@ec2-3-83-11-18.compute-1.amazonaws.com '
-              touch cock
+              fuser -k 8000/tcp &&
+              cd HammerspaceBackend
               '
