@@ -1,5 +1,6 @@
 import os
 import requests
+import time    
 
 class MPSHandler:
     def __init__(self, env_var_name="MATHPIXSNIP_KEY", endpoint=):
@@ -10,6 +11,11 @@ class MPSHandler:
         self.TRANSLATE_ENDPOINT = "https://api.mathpix.com/v3/text"
     
     def __loadTemporaryToken(self):
+        
+        epoch_time = int(time.time())
+        if epoch_time - self.tmp_key_expr > 45:
+            return
+
         headers = {
             "app_key": self.api_key
         }
