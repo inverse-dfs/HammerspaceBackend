@@ -15,6 +15,16 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.TARGET_DIR }}
-          SCRIPT_BEFORE: ls && echo "Hello World!"
-          SCRIPT_AFTER: pip install -r requirements.txt && uvicorn main:app
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          
+            #Now we have got the access of EC2 and we will start the deploy .
+            cd HammerspaceBackend &&
+            git checkout main &&
+            git fetch --all &&
+            git reset --hard origin/master &&
+            git pull origin master &&
+            pip install -r requirements.txt &&
+            uvicorn main:app 
+          '
