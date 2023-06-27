@@ -6,9 +6,33 @@ on:
   workflow_dispatch:
 env:
   COCK: "hello"
-  SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
-  REMOTE_HOST: "${{ secrets.REMOTE_HOST }}"
-  REMOTE_USER: "${{ secrets.REMOTE_USER }}"
+  SSH_PRIVATE_KEY: "MIIEpAIBAAKCAQEAhOUqC2w+wEY5LCLvF6jv0jRBM6FmrMNUUpsk7ifheFa7s6XO
+ixekynVjazP7A1LtpugQ8dJs1SjB5Tirqt/BjszhzwdXNlyeAxlzOCZQdHbr8S0L
+8v6CmSLW6nAYBfBX2AwOiFaIAZFCysIbm4VMWioI0OUCXIlD2utUixPC32yoOKyi
+aB3tUo8eTWl0WNeXTEA9gQnX/hxzr6X4+pFQJBEQXwyokIQ0S8un0PB+1Wt6XaZk
+/bxVc2dDNiIv1sjPTPyigYv6d/8beCjajU8j5TjnDviRoSPqRLcZ5HtLYMZlou6K
+IwGFfFj7QsRYUVod2W0s605SZYscAzrqMD4A3QIDAQABAoIBACnZeLoMJl6qPorV
+nXFX893AMuAtbYXuJPm2fZS53ljlB0r1ZeuLUIupF9vEjMFpNgmffuaIG1ms8hJb
+HEQ9Hlj30AxABYjK9b+IHi6Kcj+ay4YxZ1foKfxLal59WjNUknUoptLsXPwRYHU1
+VzhMa9Tg89HErE+zsjiYbxE08eMlgepn/ruIivNcTGErDT0qRn/5n47i9meYwpy0
+BVGSaZeM91QCP442F2zUooftZrInxmZPffwOLhAOmn9MZwfrURLqgdXE0KdpLGvu
+2dpRuon+QXvZlVlKZs//m3hCLrOT9eI9NFNJMV+Z2QpeMZFCnqpFwmgv7PpoN672
+FviS4wECgYEAyGNosGdoHD8ONEMgJI0hvuiABEtwgRowgHfFmC2rZwCbOXySzLH7
+flJkJeXte4h7l4WDPKlpYKuz9TChE9/omIYcgwloo9PsJ6N89wVKjQmCjs2iLYW4
+jlRedel6gmgB5zM0xEWlMvX+4dSHLfxp7q7McJ1hcV2f7AHta1UEOmECgYEAqca0
+MKzXYHJBx5AWE66Km6ezOsQX2OfAqA4Kk8mArVmpAjaVGqd2muWIKd2ESGXjf+5q
+s69YQ4UIC0meGz2s32XnYe2ZRfd7korf9vd8+YziryiQs4I0W3AORVy0I6zLnuI0
+MkWv0eg7R3KqE3CyXLQ8ZrDIkdAb/CP2kSgor/0CgYEAx/zeOF+bOcV8aZAsfg4U
+BbGIQcEAcPgwO6ZNH4lErLGgOQkogP2IHxQfOutzzXvyzM/EoD/7GS2DlkqIF4u5
+WK9PuT8knYwc/ZpeVzGCq6s4D0kOeBwiinmNJGR1jbw7WgBywwc2zdtQGxW+K5jk
+J/9vrVyEKV3lAucRibL5W0ECgYEAnoUx6eD4mM0WLkeS1X27XesPpmdB/P0nHcM+
+jQ8wXqvA6pgcUG7ch3SZ1r1GrnK0INd0OaIXP7QO9rseLUFBELYNfZpj6rhRYVra
+E7axsjCh1/qAYZvJVzchnBIbANRuq0N6iRYYPF4iO2wM8WngoD6Jxzh5jexKtPq/
+Vnmww+ECgYANVjxXVuUsXPkXTXPyT1FPXHPymZz8Lz+NonI2QQNWDgjsnxk3T1kO
+MQGmMv+Fn3tisO8/TA6aCRNcPH85bQSTTibJ28ffTgGMua03wwHbAMn8qRaajTt4
+5k9r/UvmTnloWTb8KdLHpHp1IeOm9oVhhNkrxn77SKFb+KntKsbEgg=="
+  REMOTE_HOST: "ec2-3-83-11-18.compute-1.amazonaws.com"
+  REMOTE_USER: "ubuntu"
 jobs:
   Deploy:
     name: Deploy to EC2
@@ -18,7 +42,7 @@ jobs:
       - uses: actions/checkout@v2 
       - name: Build & Deploy      
         run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
+          echo "$SSH_PRIVATE_KEY" > private_key && chmod 400 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} '
 
               cd HammerspaceBackend &&
