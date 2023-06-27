@@ -19,6 +19,7 @@ jobs:
               fuser -k 8000/tcp ;
               cd HammerspaceBackend
               git checkout main
+              git reset --hard
               git pull
               uvicorn main:app
               '
