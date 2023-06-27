@@ -15,6 +15,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
         run: |
-          echo ${REMOTE_HOST}@${REMOTE_USER}
+          echo $REMOTE_HOST@$REMOTE_USER
           echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
+          cat private_key
           '
