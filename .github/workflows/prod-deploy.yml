@@ -5,9 +5,10 @@ on:
         - main
   workflow_dispatch:
 env:
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-  REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-  REMOTE_USER: ${{ secrets.REMOTE_USER }}
+  COCK: "hello"
+  SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
+  REMOTE_HOST: "${{ secrets.REMOTE_HOST }}"
+  REMOTE_USER: "${{ secrets.REMOTE_USER }}"
 jobs:
   deploy:
     runs-on: ubuntu-latest
