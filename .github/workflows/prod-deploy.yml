@@ -10,7 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Deploy to Prod
-        uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
