@@ -27,7 +27,7 @@ class MPSHandler:
     
     def __generatePayload(self, img_url):
         payload = {
-            "src": 'https://mathpix-ocr-examples.s3.amazonaws.com/cases_hw.jpg',
+            "src": img_url,
             "formats": ["text"],
         }
         headers = {
