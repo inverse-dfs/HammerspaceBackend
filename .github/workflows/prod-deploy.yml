@@ -22,5 +22,5 @@ jobs:
                 git reset --hard &&
                 git pull ;
                 tmux new-session -A -s server &&
-                tmux send-keys -t server "/home/ubuntu/.local/bin/uvicorn main:app" C-m;
+                nohup /home/ubuntu/.local/bin/uvicorn main:app &;
               '
