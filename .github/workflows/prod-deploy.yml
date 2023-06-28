@@ -21,5 +21,5 @@ jobs:
                 git checkout main &&
                 git reset --hard &&
                 git pull ;
-                nohup /home/ubuntu/.local/bin/uvicorn main:app &
+                nohup /home/ubuntu/.local/bin/uvicorn main:app > nohup.out 2> nohup.err < /dev/null &
               '
