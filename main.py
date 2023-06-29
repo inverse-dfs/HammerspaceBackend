@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from get_signed_url import get_upload_url
 from get_signed_access_url import get_presigned_access_url
 from mps_handler import MPSHandler
-from DocumentGenerator from document_generator
+from document_generator import DocumentGenerator
 
 app = FastAPI()
 
