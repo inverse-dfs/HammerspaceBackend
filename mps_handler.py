@@ -29,6 +29,13 @@ class MPSHandler:
         payload = {
             "src": img_url,
             "formats": ["text"],
+            "math_inline_delimiters": ["$", "$"],
+            "math_display_delimiters": ["$$", "$$"],
+            "format_options": {
+                "text": {
+                    "transforms": ["rm_spaces", "rm_newlines"]
+                }
+            }
         }
         headers = {
             'Content-type': 'application/json',
@@ -36,6 +43,9 @@ class MPSHandler:
             'app_key': self.api_key
         }
         return (headers, payload)
+    
+    def postprocess(self, t: str) -> str:
+        return ' '.join(t.replace('\\\\', '\\').split('\n'))
 
     def GetTranslation(self, img_url):
         self.__loadTemporaryToken()
@@ -44,7 +54,12 @@ class MPSHandler:
         print("api key", self.api_key)
         print("response is", response)
         print("response json is", response.json())
-        return response.json()
+        json = response.json()
+        if 'text' in json:
+            return self.postprocess(response.json()['text'])
+        else:
+            return response.json()
+        
         
 
 
