@@ -1,0 +1,6 @@
+\documentclass[12pt]{article}
+\usepackage[hmargin=1in,vmargin=1in]{geometry}
+\begin{document}
+$1=1$$1=1$Hello World$1\neq1$$1\neq1$
+$$2x + 5 = 1$$
+\end{document}
