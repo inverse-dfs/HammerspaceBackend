@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from get_signed_url import get_upload_url
 from get_signed_access_url import get_presigned_access_url
 from mps_handler import MPSHandler
+from DocumentGenerator from document_generator
 
 app = FastAPI()
 
@@ -41,5 +42,9 @@ def translation_request(item: TranslationRequest):
         raise HTTPException(status_code=500, detail="Unable to Access MathPixSnip API")
     presigned_url = get_presigned_access_url(item.fileid)
     translated = handler.GetTranslation(presigned_url)
-    response = {'translation':translated}
+    generator = DocumentGenerator()
+    output_file = generator.GenerateTEX(item.fileid, translated)
+    #generate document
+    #upload latex and text to s3
+    #return presigned url
     return response
