@@ -22,5 +22,5 @@ class FileServer:
             response = s3_client.upload_file(file_name, bucket, object_name)
         except ClientError as e:
             logging.error(e)
-            return False
-        return True
+            return ''
+        return object_name
