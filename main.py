@@ -8,8 +8,9 @@ from get_signed_url import get_upload_url
 from get_signed_access_url import get_presigned_access_url
 from mps_handler import MPSHandler
 from document_generator import DocumentGenerator
+from file_server import FileServer
 
-app = FastAPI()
+app = FastAPI(debug=True)
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,7 +45,9 @@ def translation_request(item: TranslationRequest):
     translated = handler.GetTranslation(presigned_url)
     generator = DocumentGenerator()
     output_file = generator.GenerateTEX(item.fileid, translated)
-    #generate document
-    #upload latex and text to s3
-    #return presigned url
-    return response
+    generator.GeneratePDF(output_file)
+    file_store = FileServer()
+    pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
+    file_store.Upload(output_file, "tex")
+    file_store.Upload(pdf_filename, "pdf")
+    return output_file

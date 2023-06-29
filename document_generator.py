@@ -1,23 +1,24 @@
 import jinja2
+import subprocess
 
 class DocumentGenerator:
     def __init__(self):
-        self.TEMPLATE_PATH="./template.tex"
+        self.TEMPLATE_PATH="./template.jinja"
     
-    def GenerateTEX(filename, data):
-        templateLoader = jinja2.FileSystemLoader( searchpath="/" )
+    def GenerateTEX(self, filename, data):
+        fid = filename.rsplit('.', 1)[0]
+        outputFile = fid + '.tex'
+        templateLoader = jinja2.FileSystemLoader( searchpath="./" )
         templateEnv = jinja2.Environment( loader=templateLoader )
-        TEMPLATE_FILE = "templex.tex"
-        template = templateEnv.get_template( self.TEMPLATE_FILE )
+        template = templateEnv.get_template( self.TEMPLATE_PATH )
         templateVars = {
             "translated": data
         }
         outputText = template.render(templateVars) #need to figure out how to do this without loading all to memory
-        output_file = filename + '.pdf'
-        print(outputText)
-        with open(output_file, mode="w", encoding="utf-8") as message:
+        with open(outputFile, mode="w", encoding="utf-8") as message:
             message.write(outputText)
-        return output_file
+        return outputFile
     
-    def GeneratePDF(filename):
-        pass
+    def GeneratePDF(self, filename):
+        fid = filename.rsplit('.', 1)[0]
+        subprocess.run(["pdflatex", f"-jobname={fid}", filename])
