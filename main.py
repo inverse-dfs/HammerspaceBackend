@@ -49,7 +49,7 @@ def translation_request(item: TranslationRequest):
         raise HTTPException(status_code=500, detail="Error from mathpix snip") 
     translated = handler.postprocess(translated)
     injector = FormatInjector()
-    injected = injector.run()
+    injected = injector.run(translated)
     if injected == '':
         print(translated)
         raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
