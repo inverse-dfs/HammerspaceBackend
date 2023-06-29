@@ -18,9 +18,12 @@ class FileServer:
 
         # Upload the file
         s3_client = boto3.client('s3')
+        extra_args = {
+            'ContentType': 'application/pdf'
+        }
         try:
-            response = s3_client.upload_file(file_name, bucket, object_name)
+            response = s3_client.upload_file(file_name, bucket, object_name, ExtraArgs=extra_args)
         except ClientError as e:
-            logging.error(e)
+            print(e)
             return ''
         return object_name
