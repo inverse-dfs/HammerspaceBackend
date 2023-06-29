@@ -43,7 +43,7 @@ def translation_request(item: TranslationRequest):
         raise HTTPException(status_code=500, detail="Unable to Access MathPixSnip API")
     presigned_url = get_presigned_access_url(item.fileid, 'hammerspace-image-buckettest')
     translated = handler.GetTranslation(presigned_url)
-    translated = handler.preprocess(translated)
+    translated = handler.postprocess(translated)
     generator = DocumentGenerator()
     output_file = generator.GenerateTEX(item.fileid, translated)
     generator.GeneratePDF(output_file)
