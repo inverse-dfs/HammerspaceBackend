@@ -42,21 +42,27 @@ def translation_request(item: TranslationRequest):
         handler = MPSHandler()
     except KeyError as e:
         raise HTTPException(status_code=500, detail="Unable to Access MathPixSnip API")
-    presigned_url = get_presigned_access_url(item.fileid)
+    presigned_url = get_presigned_access_url(item.fileid, 'hammerspace-image-buckettest')
     translated = handler.GetTranslation(presigned_url)
     if type(translated) is dict:
         print(translated)
-        raise HTTPException(status_code=500, detail="Could not generate presigned url") 
+        raise HTTPException(status_code=500, detail="Error from mathpix snip") 
+    translated = handler.postprocess(translated)
     injector = FormatInjector()
     injected = injector.run()
     if injected == '':
         print(translated)
-        raise HTTPException(status_code=500, detail="Could not generate presigned url") 
+        raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
     generator = DocumentGenerator()    
     output_file = generator.GenerateTEX(item.fileid, injected)
     generator.GeneratePDF(output_file)
     file_store = FileServer()
     pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
-    file_store.Upload(output_file, "tex")
-    file_store.Upload(pdf_filename, "pdf")
-    return output_file
+    tex_obj = file_store.Upload(output_file, "tex")
+    pdf_obj = file_store.Upload(pdf_filename, "pdf")
+    tex_url = get_presigned_access_url(tex_obj, "hammerspace-download-bucket")
+    pdf_url = get_presigned_access_url(pdf_obj, "hammerspace-download-bucket")
+    return {
+        'pdf_url': pdf_url,
+        'tex_url': tex_url
+    }
