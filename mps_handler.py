@@ -1,10 +1,9 @@
-import os
 import requests
 import time    
 
 class MPSHandler:
-    def __init__(self, env_var_name="MATHPIXSNIP_KEY"):
-        self.api_key = os.environ.get(env_var_name)
+    def __init__(self, api_key: str):
+        self.api_key = api_key
         self.app_id = 'teamhammerspace_gmail_com_151e1c_ee0faa'
         self.tmp_key = ''
         self.tmp_key_expr = 0
@@ -51,9 +50,6 @@ class MPSHandler:
         self.__loadTemporaryToken()
         headers, payload = self.__generatePayload(img_url)
         response = requests.post(self.TRANSLATE_ENDPOINT, json=payload, headers=headers)
-        print("api key", self.api_key)
-        print("response is", response)
-        print("response json is", response.json())
         json = response.json()
         if 'text' in json:
             return self.postprocess(response.json()['text'])

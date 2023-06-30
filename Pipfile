@@ -5,11 +5,11 @@ name = "pypi"
 
 [packages]
 requests = "*"
-fastapi = "*"
-pydantic = "*"
 boto3 = "*"
 jinja2 = "*"
 uvicorn = {version = "*", extras = ["standard"]}
+fastapi = "*"
+pydantic = "*"
 
 [dev-packages]
 
