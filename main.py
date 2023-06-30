@@ -51,6 +51,7 @@ def translation_request(item: TranslationRequest):
     if len(ext) >=2 and ext[-1] == 'pdf':
         file_store.Download(fileid)
         conv_name = convert_to_jpg(fileid)
+        print("Assasasasaassasaassa", fileid)
         file_store.Upload(conv_name, "jpeg", bucket='hammerspace-image-buckettest')
         fileid = conv_name
 
