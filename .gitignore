@@ -168,4 +168,4 @@ cython_debug/
 *.jpg
 
 # rishabh's files
-dev-setup.bash
+.vars-config

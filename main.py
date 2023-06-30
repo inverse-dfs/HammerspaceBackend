@@ -12,6 +12,11 @@ from file_server import FileServer
 from format_injector import FormatInjector
 from pdf_converter import convert_to_jpg
 
+from contextlib import asynccontextmanager
+from config import Config
+
+    
+config = Config()
 app = FastAPI(debug=True)
 
 app.add_middleware(
@@ -22,27 +27,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/hello")
-def read_root():
-    return {"Hello": "World"}
-
 @app.get("/presigned")
 def presigned_url():
-    response = get_upload_url()
+    response = get_upload_url(config.image_bucket) # todo: add file type specifier to this api call
     print("response", response)    
     if response is None:
         raise HTTPException(status_code=500, detail="Could not generate presigned url") 
     return response 
+
+
 
 class TranslationRequest(BaseModel):
     fileid: str
 
 @app.post("/translate")
 def translation_request(item: TranslationRequest):
-    try:
-        handler = MPSHandler()
-    except KeyError as e:
-        raise HTTPException(status_code=500, detail="Unable to Access MathPixSnip API")
+    handler = MPSHandler(config.mathpixsnip_key)
    
     file_store = FileServer()
     fileid = item.fileid
@@ -51,29 +51,31 @@ def translation_request(item: TranslationRequest):
     if len(ext) >=2 and ext[-1] == 'pdf':
         file_store.Download(fileid)
         conv_name = convert_to_jpg(fileid)
-        print("Assasasasaassasaassa", fileid)
-        file_store.Upload(conv_name, "jpeg", bucket='hammerspace-image-buckettest')
+        file_store.Upload(conv_name, "jpeg", bucket=config.image_bucket)
         fileid = conv_name
 
-    presigned_url = get_presigned_access_url(fileid, 'hammerspace-image-buckettest')
+    presigned_url = get_presigned_access_url(fileid, config.image_bucket)
     translated = handler.GetTranslation(presigned_url)
     if type(translated) is dict:
         print(translated)
         raise HTTPException(status_code=500, detail=str(translated)) 
     translated = handler.postprocess(translated)
+
     injector = FormatInjector()
     injected = injector.run(translated)
     if injected == '':
         print(translated)
         raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
+    
     generator = DocumentGenerator()    
     output_file = generator.GenerateTEX(fileid, injected)
     generator.GeneratePDF(output_file)
     pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
-    tex_obj = file_store.Upload(output_file, "tex")
-    pdf_obj = file_store.Upload(pdf_filename, "pdf")
-    tex_url = get_presigned_access_url(tex_obj, "hammerspace-download-bucket")
-    pdf_url = get_presigned_access_url(pdf_obj, "hammerspace-download-bucket")
+    tex_obj = file_store.Upload(output_file, "tex", config.download_bucket)
+    pdf_obj = file_store.Upload(pdf_filename, "pdf", config.download_bucket)
+    
+    tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
+    pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
     return {
         'pdf_url': pdf_url,
         'tex_url': tex_url
