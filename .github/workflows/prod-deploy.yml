@@ -23,5 +23,8 @@ jobs:
                 git pull ;
                 pip install pipenv ;
                 /home/ubuntu/.local/bin/pipenv install ;
+                export MATHPIXSNIP_KEY=${{ secrets.MATHPIXSNIP_KEY }} ;
+                export IMAGE_BUCKET=${{ secrets.IMAGE_BUCKET }} ;
+                export DOWNLOAD_BUCKET=${{ secrets.DOWNLOAD_BUCKET }} ;
                 nohup /home/ubuntu/.local/bin/pipenv run uvicorn main:app > nohup.out 2> nohup.err < /dev/null &
               '
