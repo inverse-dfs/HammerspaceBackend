@@ -166,3 +166,6 @@ cython_debug/
 *.tex
 *.jpeg
 *.jpg
+
+# rishabh's files
+dev-setup.bash
