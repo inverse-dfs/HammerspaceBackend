@@ -48,10 +48,14 @@ class MPSHandler:
     def postprocess(self, t: str) -> str:
         return ' '.join(t.replace('\\\\', '\\').split('\n'))
 
-    def GetTranslation(self, img_url):
+    def GetTranslation(self, img_url, img_type):
         self.__loadTemporaryToken()
         headers, payload = self.__generatePayload(img_url)
-        response = requests.post(self.TRANSLATE_ENDPOINT, json=payload, headers=headers)
+        response = None
+        if img_type == 'pdf':
+            response = requests.post(self.TRANSLATE_PDF_ENDPOINT, json=payload, headers=headers)
+        else:
+            response = requests.post(self.TRANSLATE_ENDPOINT, json=payload, headers=headers)
         print("api key", self.api_key)
         print("response is", response)
         print("response json is", response.json())
