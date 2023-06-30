@@ -23,5 +23,5 @@ jobs:
                 git pull ;
                 pip install pipenv ;
                 pipenv install ;
-                nohup pipenv run uvicorn main:app > nohup.out 2> nohup.err < /dev/null &
+                nohup /home/ubuntu/.local/bin/pipenv run uvicorn main:app > nohup.out 2> nohup.err < /dev/null &
               '
