@@ -8,7 +8,7 @@ class FormatSymbol:
 class FormatInjector:
     def __init__(self):
         self.symbols_dict = {
-            "\\subsection*": FormatSymbol("$1=1$", "$1\\neq1$"),
+            "\\subsection*": FormatSymbol("$1=1$", "$1 \\neq 1$"),
         }
     
     def run(self, latex: str) -> str:
@@ -24,10 +24,15 @@ class FormatInjector:
                     if stack == False:
                       return ''
                     stack = False
+            if stack:
+                return ''
 
             # so much can go wrong, but this is an mvp!
             replace_start = latex.replace(value.START, key + "{")
             replace_end = replace_start.replace(value.STOP, "}")
+            print("og", latex)
+            print("rs", replace_start)
+            print("re", replace_end)
 
             print(replace_end)
             return replace_end

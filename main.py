@@ -10,6 +10,7 @@ from mps_handler import MPSHandler
 from document_generator import DocumentGenerator
 from file_server import FileServer
 from format_injector import FormatInjector
+from pdf_converter import convert_to_jpg
 
 app = FastAPI(debug=True)
 
@@ -42,11 +43,23 @@ def translation_request(item: TranslationRequest):
         handler = MPSHandler()
     except KeyError as e:
         raise HTTPException(status_code=500, detail="Unable to Access MathPixSnip API")
-    presigned_url = get_presigned_access_url(item.fileid, 'hammerspace-image-buckettest')
+   
+    file_store = FileServer()
+    fileid = item.fileid
+    ext = fileid.rsplit('.', 1)
+
+    if len(ext) >=2 and ext[-1] == 'pdf':
+        file_store.Download(fileid)
+        conv_name = convert_to_jpg(fileid)
+        print("Assasasasaassasaassa", fileid)
+        file_store.Upload(conv_name, "jpeg", bucket='hammerspace-image-buckettest')
+        fileid = conv_name
+
+    presigned_url = get_presigned_access_url(fileid, 'hammerspace-image-buckettest')
     translated = handler.GetTranslation(presigned_url)
     if type(translated) is dict:
         print(translated)
-        raise HTTPException(status_code=500, detail="Error from mathpix snip") 
+        raise HTTPException(status_code=500, detail=str(translated)) 
     translated = handler.postprocess(translated)
     injector = FormatInjector()
     injected = injector.run(translated)
@@ -54,9 +67,8 @@ def translation_request(item: TranslationRequest):
         print(translated)
         raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
     generator = DocumentGenerator()    
-    output_file = generator.GenerateTEX(item.fileid, injected)
+    output_file = generator.GenerateTEX(fileid, injected)
     generator.GeneratePDF(output_file)
-    file_store = FileServer()
     pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
     tex_obj = file_store.Upload(output_file, "tex")
     pdf_obj = file_store.Upload(pdf_filename, "pdf")

@@ -1,6 +1,6 @@
-POST http://127.0.0.1:8000/translate HTTP/1.1
+POST http://3.82.204.191/translate HTTP/1.1
 content-type: application/json
 
 {
-    "fileid": "5636451.jpeg"
+    "fileid": "piss.jpg"
 }
