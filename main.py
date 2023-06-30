@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from isFileTypeSupported import isFileTypeSupported
 
 from get_signed_url import get_upload_url
 from get_signed_access_url import get_presigned_access_url
@@ -25,9 +26,15 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/presigned")
-def presigned_url():
-    response = get_upload_url()
+
+class PresignedRequest(BaseModel):
+    file_type: str
+
+@app.post("/presigned")
+def presigned_url(item: PresignedRequest):
+    if not isFileTypeSupported(item.file_type):
+        raise HTTPException(status_code=500, detail="File Type " + item.file_type + " is not supported")
+    response = get_upload_url(item.file_type)
     print("response", response)    
     if response is None:
         raise HTTPException(status_code=500, detail="Could not generate presigned url") 

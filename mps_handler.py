@@ -10,6 +10,7 @@ class MPSHandler:
         self.tmp_key_expr = 0
         self.TOKEN_ENDPOINT = 'https://api.mathpix.com/v3/app-tokens'
         self.TRANSLATE_ENDPOINT = "https://api.mathpix.com/v3/text"
+        self.TRANSLATE_PDF_ENDPOINT = "https://api.mathpix.com/v3/pdf"
     
     def __loadTemporaryToken(self):
         
