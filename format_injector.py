@@ -8,7 +8,7 @@ class FormatSymbol:
 class FormatInjector:
     def __init__(self):
         self.symbols_dict = {
-            "\\subsection*": FormatSymbol("$1=1$", "$1\\neq1$"),
+            "\\subsection*": FormatSymbol("$1=1$", "$1 \\neq 1$"),
         }
     
     def run(self, latex: str) -> str:
