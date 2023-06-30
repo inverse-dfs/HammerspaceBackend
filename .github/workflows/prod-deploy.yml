@@ -21,6 +21,7 @@ jobs:
                 git checkout main &&
                 git reset --hard &&
                 git pull ;
-                pip install -r requirements.txt ;
-                nohup /home/ubuntu/.local/bin/uvicorn main:app > nohup.out 2> nohup.err < /dev/null &
+                pip install pipenv ;
+                pipenv install ;
+                nohup pipenv run uvicorn main:app > nohup.out 2> nohup.err < /dev/null &
               '
