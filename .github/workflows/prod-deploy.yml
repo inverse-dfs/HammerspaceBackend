@@ -22,6 +22,6 @@ jobs:
                 git reset --hard &&
                 git pull ;
                 pip install pipenv ;
-                /home/ubuntu/.local/bin/pipenv  install ;
+                /home/ubuntu/.local/bin/pipenv install ;
                 nohup /home/ubuntu/.local/bin/pipenv run uvicorn main:app > nohup.out 2> nohup.err < /dev/null &
               '
