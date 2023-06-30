@@ -164,3 +164,4 @@ cython_debug/
 *.aux
 *.log
 *.tex
+*.jpeg

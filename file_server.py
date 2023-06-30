@@ -27,3 +27,7 @@ class FileServer:
             print(e)
             return ''
         return object_name
+
+    def Download(self, fileid, bucket='hammerspace-image-buckettest'):
+        s3 = boto3.client('s3')
+        s3.download_file(Bucket=bucket, Key=fileid, Filename=fileid)
