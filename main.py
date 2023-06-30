@@ -60,13 +60,13 @@ def translation_request(item: TranslationRequest):
         print(translated)
         raise HTTPException(status_code=500, detail=str(translated)) 
     translated = handler.postprocess(translated)
-    injector = FormatInjector()
-    injected = injector.run(translated)
-    if injected == '':
-        print(translated)
-        raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
+    # injector = FormatInjector()
+    # injected = injector.run(translated)
+    # if injected == '':
+    #     print(translated)
+    #     raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
     generator = DocumentGenerator()    
-    output_file = generator.GenerateTEX(fileid, injected)
+    output_file = generator.GenerateTEX(fileid, translated)
     generator.GeneratePDF(output_file)
     pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
     tex_obj = file_store.Upload(output_file, "tex")
