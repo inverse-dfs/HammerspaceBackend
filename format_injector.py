@@ -24,6 +24,8 @@ class FormatInjector:
                     if stack == False:
                       return ''
                     stack = False
+            if not stack:
+                return ''
 
             # so much can go wrong, but this is an mvp!
             replace_start = latex.replace(value.START, key + "{")
