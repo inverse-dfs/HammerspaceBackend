@@ -28,6 +28,9 @@ class FormatInjector:
             # so much can go wrong, but this is an mvp!
             replace_start = latex.replace(value.START, key + "{")
             replace_end = replace_start.replace(value.STOP, "}")
+            print("og", latex)
+            print("rs", replace_start)
+            print("re", replace_end)
 
             print(replace_end)
             return replace_end
