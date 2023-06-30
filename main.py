@@ -67,7 +67,7 @@ def translation_request(item: TranslationRequest):
         print(translated)
         raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
     generator = DocumentGenerator()    
-    output_file = generator.GenerateTEX(fileid, translated)
+    output_file = generator.GenerateTEX(fileid, injected)
     generator.GeneratePDF(output_file)
     pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
     tex_obj = file_store.Upload(output_file, "tex")
