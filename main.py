@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from isFileTypeSupported import isFileTypeSupported
 
 from get_signed_url import get_upload_url
 from get_signed_access_url import get_presigned_access_url
@@ -25,9 +26,15 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/presigned")
-def presigned_url():
-    response = get_upload_url()
+
+class PresignedRequest(BaseModel):
+    file_type: str
+
+@app.post("/presigned")
+def presigned_url(item: PresignedRequest):
+    if not isFileTypeSupported(item.file_type):
+        raise HTTPException(status_code=500, detail="File Type " + item.file_type + " is not supported")
+    response = get_upload_url(item.file_type)
     print("response", response)    
     if response is None:
         raise HTTPException(status_code=500, detail="Could not generate presigned url") 
@@ -43,7 +50,9 @@ def translation_request(item: TranslationRequest):
     except KeyError as e:
         raise HTTPException(status_code=500, detail="Unable to Access MathPixSnip API")
     presigned_url = get_presigned_access_url(item.fileid, 'hammerspace-image-buckettest')
-    translated = handler.GetTranslation(presigned_url)
+    [pdf_filename, pdf_fileType] = output_file.rsplit('.', 1)
+    print('fileName is: ' + pdf_filename + 'pdf_fileType' + pdf_fileType)
+    translated = handler.GetTranslation(presigned_url, pdf_fileType)
     if type(translated) is dict:
         print(translated)
         raise HTTPException(status_code=500, detail="Error from mathpix snip") 
@@ -57,7 +66,7 @@ def translation_request(item: TranslationRequest):
     output_file = generator.GenerateTEX(item.fileid, injected)
     generator.GeneratePDF(output_file)
     file_store = FileServer()
-    pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
+    pdf_filename = pdf_filename + ".pdf"
     tex_obj = file_store.Upload(output_file, "tex")
     pdf_obj = file_store.Upload(pdf_filename, "pdf")
     tex_url = get_presigned_access_url(tex_obj, "hammerspace-download-bucket")
