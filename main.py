@@ -13,6 +13,7 @@ from format_injector import FormatInjector
 from pdf_converter import convert_to_jpg
 from create_user import insert_user
 from verify_login import verify_login
+from db import database
 
 from contextlib import asynccontextmanager
 from config import Config
@@ -56,6 +57,7 @@ def singup(item: SignupRequest):
 
 class TranslationRequest(BaseModel):
     fileid: str
+    username: str
 
 @app.post("/translate")
 def translation_request(item: TranslationRequest):
@@ -93,6 +95,12 @@ def translation_request(item: TranslationRequest):
     
     tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
     pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
+
+    db = database()
+    query = ("Insert into Scans(email, scan_id, date) VALUES(%s, %s, curdate())") #email but its username
+    result = db.execute(query, [item.username, ])
+
+
     return {
         'pdf_url': pdf_url,
         'tex_url': tex_url
