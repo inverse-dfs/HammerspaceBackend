@@ -105,11 +105,11 @@ def translation_request(item: TranslationRequest):
         'tex_url': tex_url
     }
 
-class LoginRequest(BaseModel):
+class HistoryRequest(BaseModel):
     username: str
 
 @app.get("/history")
-def singup(item: SignupRequest):
+def singup(item: HistoryRequest):
     db = database()
     query = ("Select * From Scans Where username=%s") #email but its username
     result = db.execute(query, [item.username])
