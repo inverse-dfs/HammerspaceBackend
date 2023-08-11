@@ -97,9 +97,8 @@ def translation_request(item: TranslationRequest):
     pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
 
     db = database()
-    query = ("Insert into Scans(email, scan_id, date) VALUES(%s, %s, curdate())") #email but its username
-    result = db.execute(query, [item.username, ])
-
+    query = ("Insert into Scans(username, pdf, latex, date) VALUES(%s, %s, %s, curdate())") #email but its username
+    result = db.execute(query, [item.username, pdf_url, tex_url])
 
     return {
         'pdf_url': pdf_url,
