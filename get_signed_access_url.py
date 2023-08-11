@@ -17,7 +17,7 @@ def generate_url(bucket_name, object_name, expiration=3600):
         response = s3_client.generate_presigned_url('get_object',
                                                     Params={'Bucket': bucket_name,
                                                             'Key': object_name},
-                                                    ExpiresIn=expiration)
+                                                    ExpiresIn=5000000)
     except ClientError as e:
         logging.error(e)
         return None

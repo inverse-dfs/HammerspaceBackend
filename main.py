@@ -11,6 +11,8 @@ from document_generator import DocumentGenerator
 from file_server import FileServer
 from format_injector import FormatInjector
 from pdf_converter import convert_to_jpg
+from create_user import insert_user
+from verify_login import verify_login
 
 from contextlib import asynccontextmanager
 from config import Config
@@ -35,7 +37,22 @@ def presigned_url():
         raise HTTPException(status_code=500, detail="Could not generate presigned url") 
     return response 
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+class SignupRequest(BaseModel):
+    username: str
+    email: str
+    password: str
 
+@app.post("/login")
+def login(item: LoginRequest):
+    return verify_login(item.username, item.password)
+
+@app.post("/signup")
+def singup(item: SignupRequest):
+    res = insert_user(item.username, item.email, item.password)
+    return res
 
 class TranslationRequest(BaseModel):
     fileid: str
