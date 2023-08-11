@@ -1,8 +1,8 @@
-use CS493;
+use notenote;
 
 CREATE TABLE User (
     email varchar(100) NOT NULL,
-    username varchar(100),
+    username varchar(100) NOT NULL,
     password varchar(200) NOT NULL,
     PRIMARY KEY (email)
 );
