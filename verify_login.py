@@ -8,7 +8,7 @@ def verify_login(username, password):
     log = logging.getLogger(__name__)
     try:
         db = database()
-        query = ("SELECT u.user_pass FROM User as u WHERE u.username = %s")
+        query = ("SELECT u.password FROM User as u WHERE u.username = %s")
         result = db.execute(query, [username])
         log.debug("starting password comp")
         for r in result:
