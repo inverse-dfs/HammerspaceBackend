@@ -104,3 +104,14 @@ def translation_request(item: TranslationRequest):
         'pdf_url': pdf_url,
         'tex_url': tex_url
     }
+
+class LoginRequest(BaseModel):
+    username: str
+
+@app.get("/history")
+def singup(item: SignupRequest):
+    db = database()
+    query = ("Select * From Scans Where username=%s") #email but its username
+    result = db.execute(query, [item.username])
+    print(result)
+    return result
