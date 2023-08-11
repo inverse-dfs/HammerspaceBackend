@@ -9,14 +9,14 @@ def insert_user(username, email, password):
     log = logging.getLogger(__name__)
     try:
         db = database()
-        query = ("SELECT * FROM USER as u WHERE u.email = %s OR u.username=%s")
+        query = ("SELECT * FROM User as u WHERE u.email = %s OR u.username=%s")
         result = db.execute(query, [email, username])
         if result != []:
             return "Invalid username or email provided, already exists!"
-        query = "Insert into USER(email, username, password) VALUES(%s, %s, %s)"
+        query = "Insert into User(email, username, password) VALUES(%s, %s, %s)"
         result = db.execute(query, [email, username, password])
         return "success"
 
     except Exception as e:
         log.debug(e)
-        return "failure"
+        return "failxure"

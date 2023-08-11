@@ -1,4 +1,5 @@
-from pydantic import Field, BaseSettings
+from pydantic import Field
+from pydantic_settings import BaseSettingsx
 
 class Config(BaseSettings):
     """
