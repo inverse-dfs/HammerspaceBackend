@@ -75,11 +75,11 @@ class ImageSegmenter:
     def upload_math_imgs(self):
         fs = FileServer()
         for text, _ in self.mapping.items():
-            fs.Upload(f'math_saves/{self.uid}-{text}.jpg', 'jpg', self.config.image_bucket)
+            fs.Upload(f'tmp/{self.uid}-{text}.jpg', 'jpg', self.config.image_bucket)
 
     def upload_text_img(self):
         fs = FileServer()
-        fs.Upload(f'math_saves/{self.uid}.jpg', 'jpg', self.config.image_bucket)
+        fs.Upload(f'tmp/{self.uid}.jpg', 'jpg', self.config.image_bucket)
     
     def send_to_mathpix(self):
         handler = MPSHandler(self.config.mathpixsnip_key)
