@@ -82,6 +82,9 @@ def translation_request(item: TranslationRequest):
     processed_text = segmenter.send_text_to_mathpix()
     for text, new in maths_translations.items():
         processed_text = processed_text.replace(text, new)
+    print("-----------------------------------")
+    print(processed_text)
+    print("-----------------------------------")
     uid = segmenter.uid
     fileid = f'{uid}-final'
     file_store = FileServer()
