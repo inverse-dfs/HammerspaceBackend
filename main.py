@@ -13,6 +13,7 @@ from format_injector import FormatInjector
 from pdf_converter import convert_to_jpg
 from create_user import insert_user
 from verify_login import verify_login
+from image_segmentation import ImageSegmenter
 
 from contextlib import asynccontextmanager
 from config import Config
@@ -72,7 +73,12 @@ def translation_request(item: TranslationRequest):
     #     fileid = conv_name
 
     #download the image
-    file_store.Download(fileid, config.image_bucket)
+
+    file_store.Download(fileid, config.image_bucket, path='tmp/')
+    segmenter = ImageSegmenter(f'tmp/{fileid}')
+    segmenter.save_math_imgs()
+    segmenter.save_text_imgs()
+    return "huge"
     #save the 
 
     # presigned_url = get_presigned_access_url(fileid, config.image_bucket)
