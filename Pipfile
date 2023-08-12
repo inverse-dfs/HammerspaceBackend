@@ -10,6 +10,7 @@ jinja2 = "*"
 uvicorn = {version = "*", extras = ["standard"]}
 fastapi = "*"
 pydantic = "*"
+opencv-python = "*"
 
 [dev-packages]
 
