@@ -2,14 +2,19 @@ import cv2
 import uuid
 import os
 
+from file_server import FileServer
+from get_signed_access_url import get_presigned_access_url
+from mps_handler import MPSHandler
+
 class ImageSegmenter:
-    def __init__(self, file_path):
+    def __init__(self, file_path, config):
         self.image = cv2.imread(file_path)
         self.blur = cv2.pyrMeanShiftFiltering(self.image, 11, 21)
         self.gray = cv2.cvtColor(self.blur, cv2.COLOR_BGR2GRAY)
         self.thresh = cv2.threshold(self.gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
         self.__get_mappings()
         self.uid = uuid.uuid4()
+        self.config = config
 
     def create_boxes(self):
         """
@@ -67,5 +72,39 @@ class ImageSegmenter:
         os.makedirs('./tmp', exist_ok=True)
         cv2.imwrite(f'./tmp/{self.uid}.jpg', self.image)
     
+    def upload_math_imgs(self):
+        fs = FileServer()
+        for text, _ in self.mapping.items():
+            fs.Upload(f'math_saves/{self.uid}-{text}.jpg', 'jpg', self.config.image_bucket)
+
+    def upload_text_img(self):
+        fs = FileServer()
+        fs.Upload(f'math_saves/{self.uid}.jpg', 'jpg', self.config.image_bucket)
+    
+    def send_to_mathpix(self):
+        handler = MPSHandler(self.config.mathpixsnip_key)
+        translations = {}
+        for text, _ in self.mapping.items():
+            fileid = f'{self.uid}-{text}.jpg'
+            presigned_url = get_presigned_access_url(fileid, self.config.image_bucket)
+            translated = handler.GetTranslation(presigned_url)
+
+            if type(translated) is dict:
+                print(translated)
+                exit(1)
+            translated = handler.postprocess(translated)
+            translations[text] = translated
+        return translations
+    
+    def send_text_to_mathpix(self):
+        handler = MPSHandler(self.config.mathpixsnip_key)
+        fileid = f'{self.uid}.jpg'
+        presigned_url = get_presigned_access_url(fileid,  self.config.image_bucket)
+        translated = handler.GetTranslation(presigned_url)
+        if type(translated) is dict:
+            print(translated)
+            exit(1)
+        translated = handler.postprocess(translated)
+        return translated
 
         

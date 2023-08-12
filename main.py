@@ -72,13 +72,33 @@ def translation_request(item: TranslationRequest):
     #     file_store.Upload(conv_name, "jpeg", bucket=config.image_bucket)
     #     fileid = conv_name
 
-    #download the image
-
     file_store.Download(fileid, config.image_bucket, path='tmp/')
-    segmenter = ImageSegmenter(f'tmp/{fileid}')
+    segmenter = ImageSegmenter(f'tmp/{fileid}', config)
     segmenter.save_math_imgs()
+    segmenter.upload_math_imgs()
     segmenter.save_text_imgs()
-    return "huge"
+    segmenter.upload_text_img()
+    maths_translations = segmenter.send_to_mathpix()
+    processed_text = segmenter.send_text_to_mathpix()
+    for text, new in maths_translations.items():
+        processed_text = processed_text.replace(text, new)
+    uid = segmenter.uid
+    fileid = f'{uid}-final'
+    file_store = FileServer()
+    generator = DocumentGenerator()    
+    output_file = generator.GenerateTEX(fileid, processed_text)
+    generator.GeneratePDF(output_file)
+    pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
+    tex_obj = file_store.Upload(output_file, "tex", config.download_bucket)
+    pdf_obj = file_store.Upload(pdf_filename, "pdf", config.download_bucket)
+
+    tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
+    pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
+
+    print({
+        'pdf_url': pdf_url,
+        'tex_url': tex_url
+    })
     #save the 
 
     # presigned_url = get_presigned_access_url(fileid, config.image_bucket)

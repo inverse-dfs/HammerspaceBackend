@@ -2,5 +2,5 @@ POST  http://3.84.55.90/translate HTTP/1.1
 content-type: application/json
 
 {
-    "fileid": "1179570.jpeg"
+    "fileid": "2.jpg"
 }
