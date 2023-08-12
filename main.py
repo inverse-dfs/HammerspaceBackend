@@ -95,10 +95,10 @@ def translation_request(item: TranslationRequest):
     tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
     pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
 
-    print({
+    return {
         'pdf_url': pdf_url,
         'tex_url': tex_url
-    })
+    }
     #save the 
 
     # presigned_url = get_presigned_access_url(fileid, config.image_bucket)
