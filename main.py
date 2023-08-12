@@ -65,11 +65,15 @@ def translation_request(item: TranslationRequest):
     fileid = item.fileid
     ext = fileid.rsplit('.', 1)
 
-    if len(ext) >=2 and ext[-1] == 'pdf':
-        file_store.Download(fileid)
-        conv_name = convert_to_jpg(fileid)
-        file_store.Upload(conv_name, "jpeg", bucket=config.image_bucket)
-        fileid = conv_name
+    # if len(ext) >=2 and ext[-1] == 'pdf':
+    #     file_store.Download(fileid)
+    #     conv_name = convert_to_jpg(fileid)
+    #     file_store.Upload(conv_name, "jpeg", bucket=config.image_bucket)
+    #     fileid = conv_name
+
+    #download the image
+    file_store.Download(fileid, config.image_bucket)
+    #save the 
 
     presigned_url = get_presigned_access_url(fileid, config.image_bucket)
     translated = handler.GetTranslation(presigned_url)
