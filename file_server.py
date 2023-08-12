@@ -31,4 +31,4 @@ class FileServer:
 
     def Download(self, fileid, bucket: str):
         s3 = boto3.client('s3')
-        s3.download_file(Bucket=bucket, Key=fileid, Filename='imgs/fileid')
+        s3.download_file(Bucket=bucket, Key=fileid, Filename=f'imgs/{fileid}')

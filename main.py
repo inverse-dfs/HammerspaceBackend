@@ -75,29 +75,29 @@ def translation_request(item: TranslationRequest):
     file_store.Download(fileid, config.image_bucket)
     #save the 
 
-    presigned_url = get_presigned_access_url(fileid, config.image_bucket)
-    translated = handler.GetTranslation(presigned_url)
-    if type(translated) is dict:
-        print(translated)
-        raise HTTPException(status_code=500, detail=str(translated)) 
-    translated = handler.postprocess(translated)
+    # presigned_url = get_presigned_access_url(fileid, config.image_bucket)
+    # translated = handler.GetTranslation(presigned_url)
+    # if type(translated) is dict:
+    #     print(translated)
+    #     raise HTTPException(status_code=500, detail=str(translated)) 
+    # translated = handler.postprocess(translated)
 
-    injector = FormatInjector()
-    injected = injector.run(translated)
-    if injected == '':
-        print(translated)
-        raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
+    # injector = FormatInjector()
+    # injected = injector.run(translated)
+    # if injected == '':
+    #     print(translated)
+    #     raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
     
-    generator = DocumentGenerator()    
-    output_file = generator.GenerateTEX(fileid, injected)
-    generator.GeneratePDF(output_file)
-    pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
-    tex_obj = file_store.Upload(output_file, "tex", config.download_bucket)
-    pdf_obj = file_store.Upload(pdf_filename, "pdf", config.download_bucket)
+    # generator = DocumentGenerator()    
+    # output_file = generator.GenerateTEX(fileid, injected)
+    # generator.GeneratePDF(output_file)
+    # pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
+    # tex_obj = file_store.Upload(output_file, "tex", config.download_bucket)
+    # pdf_obj = file_store.Upload(pdf_filename, "pdf", config.download_bucket)
     
-    tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
-    pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
-    return {
-        'pdf_url': pdf_url,
-        'tex_url': tex_url
-    }
+    # tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
+    # pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
+    # return {
+    #     'pdf_url': pdf_url,
+    #     'tex_url': tex_url
+    # }
