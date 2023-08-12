@@ -29,6 +29,6 @@ class FileServer:
             return ''
         return object_name
 
-    def Download(self, fileid, bucket: str):
+    def Download(self, fileid, bucket: str, path=''):
         s3 = boto3.client('s3')
-        s3.download_file(Bucket=bucket, Key=fileid, Filename=fileid)
+        s3.download_file(Bucket=bucket, Key=fileid, Filename=f'{path}{fileid}')

@@ -13,6 +13,7 @@ from format_injector import FormatInjector
 from pdf_converter import convert_to_jpg
 from create_user import insert_user
 from verify_login import verify_login
+from image_segmentation import ImageSegmenter
 from db import database
 
 from contextlib import asynccontextmanager
@@ -67,32 +68,36 @@ def translation_request(item: TranslationRequest):
     fileid = item.fileid
     ext = fileid.rsplit('.', 1)
 
-    if len(ext) >=2 and ext[-1] == 'pdf':
-        file_store.Download(fileid)
-        conv_name = convert_to_jpg(fileid)
-        file_store.Upload(conv_name, "jpeg", bucket=config.image_bucket)
-        fileid = conv_name
+    # if len(ext) >=2 and ext[-1] == 'pdf':
+    #     file_store.Download(fileid)
+    #     conv_name = convert_to_jpg(fileid)
+    #     file_store.Upload(conv_name, "jpeg", bucket=config.image_bucket)
+    #     fileid = conv_name
 
-    presigned_url = get_presigned_access_url(fileid, config.image_bucket)
-    translated = handler.GetTranslation(presigned_url)
-    if type(translated) is dict:
-        print(translated)
-        raise HTTPException(status_code=500, detail=str(translated)) 
-    translated = handler.postprocess(translated)
-
-    injector = FormatInjector()
-    injected = injector.run(translated)
-    if injected == '':
-        print(translated)
-        raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
-    
+    file_store.Download(fileid, config.image_bucket, path='tmp/')
+    segmenter = ImageSegmenter(f'tmp/{fileid}', config)
+    segmenter.save_math_imgs()
+    segmenter.upload_math_imgs()
+    segmenter.save_text_imgs()
+    segmenter.upload_text_img()
+    maths_translations = segmenter.send_to_mathpix()
+    processed_text = segmenter.send_text_to_mathpix()
+    for text, new in maths_translations.items():
+        processed_text = pr6
+        ocessed_text.replace(text, new)
+    print("-----------------------------------")
+    print(processed_text)
+    print("-----------------------------------")
+    uid = segmenter.uid
+    fileid = f'{uid}-final'
+    file_store = FileServer()
     generator = DocumentGenerator()    
-    output_file = generator.GenerateTEX(fileid, injected)
+    output_file = generator.GenerateTEX(fileid, processed_text)
     generator.GeneratePDF(output_file)
     pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
     tex_obj = file_store.Upload(output_file, "tex", config.download_bucket)
     pdf_obj = file_store.Upload(pdf_filename, "pdf", config.download_bucket)
-    
+
     tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
     pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
 
@@ -104,6 +109,34 @@ def translation_request(item: TranslationRequest):
         'pdf_url': pdf_url,
         'tex_url': tex_url
     }
+    #save the 
+
+    # presigned_url = get_presigned_access_url(fileid, config.image_bucket)
+    # translated = handler.GetTranslation(presigned_url)
+    # if type(translated) is dict:
+    #     print(translated)
+    #     raise HTTPException(status_code=500, detail=str(translated)) 
+    # translated = handler.postprocess(translated)
+
+    # injector = FormatInjector()
+    # injected = injector.run(translated)
+    # if injected == '':
+    #     print(translated)
+    #     raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
+    
+    # generator = DocumentGenerator()    
+    # output_file = generator.GenerateTEX(fileid, injected)
+    # generator.GeneratePDF(output_file)
+    # pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
+    # tex_obj = file_store.Upload(output_file, "tex", config.download_bucket)
+    # pdf_obj = file_store.Upload(pdf_filename, "pdf", config.download_bucket)
+    
+    # tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
+    # pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
+    # return {
+    #     'pdf_url': pdf_url,
+    #     'tex_url': tex_url
+    # }
 
 class HistoryRequest(BaseModel):
     username: str
