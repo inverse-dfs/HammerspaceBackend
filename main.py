@@ -14,6 +14,7 @@ from pdf_converter import convert_to_jpg
 from create_user import insert_user
 from verify_login import verify_login
 from image_segmentation import ImageSegmenter
+from db import database
 
 from contextlib import asynccontextmanager
 from config import Config
@@ -57,6 +58,7 @@ def singup(item: SignupRequest):
 
 class TranslationRequest(BaseModel):
     fileid: str
+    username: str
 
 @app.post("/translate")
 def translation_request(item: TranslationRequest):
@@ -81,7 +83,8 @@ def translation_request(item: TranslationRequest):
     maths_translations = segmenter.send_to_mathpix()
     processed_text = segmenter.send_text_to_mathpix()
     for text, new in maths_translations.items():
-        processed_text = processed_text.replace(text, new)
+        processed_text = pr6
+        ocessed_text.replace(text, new)
     print("-----------------------------------")
     print(processed_text)
     print("-----------------------------------")
@@ -97,6 +100,10 @@ def translation_request(item: TranslationRequest):
 
     tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
     pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
+
+    db = database()
+    query = ("Insert into Scans(username, pdf, latex, date) VALUES(%s, %s, %s, curdate())") #email but its username
+    result = db.execute(query, [item.username, pdf_url, tex_url])
 
     return {
         'pdf_url': pdf_url,
@@ -130,3 +137,14 @@ def translation_request(item: TranslationRequest):
     #     'pdf_url': pdf_url,
     #     'tex_url': tex_url
     # }
+
+class HistoryRequest(BaseModel):
+    username: str
+
+@app.get("/history")
+def history(item: HistoryRequest):
+    db = database()
+    query = ("Select pdf, latex, date From Scans Where username=%s") #email but its username
+    result = db.execute(query, [item.username])
+    print(result)
+    return result

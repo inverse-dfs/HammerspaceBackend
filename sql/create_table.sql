@@ -1,18 +1,19 @@
-use CS493;
+use notenote;
 
 CREATE TABLE User (
     email varchar(100) NOT NULL,
-    username varchar(100),
+    username varchar(100) NOT NULL,
     password varchar(200) NOT NULL,
-    PRIMARY KEY (email)
+    PRIMARY KEY (username)
 );
 
 CREATE TABLE Scans (
-    email varchar(100) NOT NULL,
-    scan_id char(32) NOT NULL,
+    username varchar(100) NOT NULL,
+    pdf varchar(100) NOT NULL,
+    latex varchar(100) NOT NULL,
     date datetime NOT NULL,
-    FOREIGN KEY (email) REFERENCES User(email),
-    PRIMARY KEY (email, scan_id)
+    FOREIGN KEY (username) REFERENCES User(username),
+    PRIMARY KEY (username, pdf, latex)
 );
 
 -- FOR LATER, FUTURE USE
