@@ -83,8 +83,7 @@ def translation_request(item: TranslationRequest):
     maths_translations = segmenter.send_to_mathpix()
     processed_text = segmenter.send_text_to_mathpix()
     for text, new in maths_translations.items():
-        processed_text = pr6
-        ocessed_text.replace(text, new)
+        processed_text = processed_text.replace(text, new)
     print("-----------------------------------")
     print(processed_text)
     print("-----------------------------------")
