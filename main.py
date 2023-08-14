@@ -15,6 +15,7 @@ from create_user import insert_user
 from verify_login import verify_login
 from image_segmentation import ImageSegmenter
 from db import database
+from uuid import uuid4
 
 from contextlib import asynccontextmanager
 from config import Config
@@ -101,8 +102,8 @@ def translation_request(item: TranslationRequest):
     pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
 
     db = database()
-    query = ("Insert into Scans(username, pdf, latex, date) VALUES(%s, %s, %s, curdate())") #email but its username
-    result = db.execute(query, [item.username, pdf_url, tex_url])
+    query = ("Insert into Scans(username, pdf, latex, date, id) VALUES(%s, %s, %s, curdate(), %s)") #email but its username
+    result = db.execute(query, [item.username, pdf_url, tex_url, str(uuid4())])
 
     return {
         'pdf_url': pdf_url,
