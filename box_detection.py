@@ -3,6 +3,7 @@ from pprint import PrettyPrinter
 import cv2
 import numpy as np
 from document_generator import DocumentGenerator
+from format_injector import FormatInjector
 from file_server import FileServer
 import uuid
 
@@ -101,7 +102,7 @@ def send_text_to_mathpix(uid: str):
 
 
 
-image = cv2.imread('2.jpeg')
+image = cv2.imread('8.jpeg')
 blur = cv2.pyrMeanShiftFiltering(image, 11, 21)
 gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
 thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
@@ -131,10 +132,10 @@ save_text_image(image, uid)
 upload_text_image(uid)
 final_translated = send_text_to_mathpix(uid)
 for text, new in translations.items():
-    print(text, new)
     final_translated = final_translated.replace(text, new)
-print(final_translated)
-
+fi = FormatInjector()
+final_translated = fi.run(final_translated)
+print(r"{}".format(final_translated))
 fileid = f'{uid}-final'
 file_store = FileServer()
 generator = DocumentGenerator()    
