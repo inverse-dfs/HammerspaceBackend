@@ -101,9 +101,11 @@ def translation_request(item: TranslationRequest):
     tex_url = get_presigned_access_url(tex_obj, config.download_bucket)
     pdf_url = get_presigned_access_url(pdf_obj, config.download_bucket)
 
+    v = str(uuid4())
+    print("UUID IS ", v)
     db = database()
     query = ("Insert into Scans(username, pdf, latex, date, id) VALUES(%s, %s, %s, curdate(), %s)") #email but its username
-    result = db.execute(query, [item.username, pdf_url, tex_url, str(uuid4())])
+    result = db.execute(query, [item.username, pdf_url, tex_url, v])
 
     return {
         'pdf_url': pdf_url,
