@@ -140,7 +140,7 @@ def translation_request(item: TranslationRequest):
 class HistoryRequest(BaseModel):
     username: str
 
-@app.get("/history")
+@app.post("/history")
 def history(item: HistoryRequest):
     db = database()
     query = ("Select pdf, latex, date From Scans Where username=%s") #email but its username
