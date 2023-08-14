@@ -87,6 +87,11 @@ def translation_request(item: TranslationRequest):
         processed_text = processed_text.replace(text, new)
     print("-----------------------------------")
     print(processed_text)
+    injector = FormatInjector()
+    injected = injector.run(processed_text)
+    if injected == '':
+        print(processed_text)
+        raise HTTPException(status_code=500, detail="Something went wrong with latex injection. The input was probably poorly formatted.") 
     print("-----------------------------------")
     uid = segmenter.uid
     fileid = f'{uid}-final'
@@ -111,7 +116,7 @@ def translation_request(item: TranslationRequest):
         'pdf_url': pdf_url,
         'tex_url': tex_url
     }
-    #save the 
+    # save the 
 
     # presigned_url = get_presigned_access_url(fileid, config.image_bucket)
     # translated = handler.GetTranslation(presigned_url)
