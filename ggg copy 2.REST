@@ -1,7 +1,6 @@
-POST  http://3.84.55.90/translate HTTP/1.1
+POST  http://3.84.55.90/history HTTP/1.1
 content-type: application/json
 
 {
-    "fileid": "2.jpg",
-    "username": "test"
+    "username": "12345"
 }

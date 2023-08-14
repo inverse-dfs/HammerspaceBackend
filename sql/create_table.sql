@@ -9,11 +9,12 @@ CREATE TABLE User (
 
 CREATE TABLE Scans (
     username varchar(100) NOT NULL,
-    pdf varchar(100) NOT NULL,
-    latex varchar(100) NOT NULL,
+    pdf varchar(2000) NOT NULL,
+    latex varchar(2000) NOT NULL,
     date datetime NOT NULL,
+    id varchar(36) NOT NULL,
     FOREIGN KEY (username) REFERENCES User(username),
-    PRIMARY KEY (username, pdf, latex)
+    PRIMARY KEY (id)
 );
 
 -- FOR LATER, FUTURE USE
