@@ -8,8 +8,8 @@ class FormatSymbol:
 class FormatInjector:
     def __init__(self):
         self.symbols_dict = {
-            "\\section*": FormatSymbol("\#h2s", "\#h2e"),
-            "\\subsection*": FormatSymbol("\#h3s","\#h3e")
+            "\\section*": FormatSymbol("\\#h2s", "\\#h2e"),
+            "\\subsection*": FormatSymbol("\\#h3s","\\#h3e")
         }
     
     def run(self, latex: str) -> str:
@@ -53,10 +53,10 @@ class TestRunner:
                 output = test_function(file_contents)
                 print(f"File: {file_name}\n Input: \n{file_contents}\n Output: \n{output}\n")
 
-# directory = './tests/injection_tests'
-# fi = FormatInjector()
-# runner = TestRunner(directory)
-# runner.run_tests(fi.run)
+directory = './tests/injection_tests'
+fi = FormatInjector()
+runner = TestRunner(directory)
+runner.run_tests(fi.run)
 
 
                 
