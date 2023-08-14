@@ -97,7 +97,7 @@ def translation_request(item: TranslationRequest):
     fileid = f'{uid}-final'
     file_store = FileServer()
     generator = DocumentGenerator()    
-    output_file = generator.GenerateTEX(fileid, processed_text)
+    output_file = generator.GenerateTEX(fileid, injected)
     generator.GeneratePDF(output_file)
     pdf_filename = output_file.rsplit('.', 1)[0] + ".pdf"
     tex_obj = file_store.Upload(output_file, "tex", config.download_bucket)
