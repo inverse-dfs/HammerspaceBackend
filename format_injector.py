@@ -8,8 +8,8 @@ class FormatSymbol:
 class FormatInjector:
     def __init__(self):
         self.symbols_dict = {
-            "\\section*": FormatSymbol("\\#h2s", "\\#h2e"),
-            "\\subsection*": FormatSymbol("\\#h3s","\\#h3e")
+            "\\section*": FormatSymbol("\\#Hs", "\\#He"),
+            "\\subsection*": FormatSymbol("\\#hs","\\#he")
         }
     
     def run(self, latex: str) -> str:
