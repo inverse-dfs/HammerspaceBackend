@@ -8,34 +8,36 @@ class FormatSymbol:
 class FormatInjector:
     def __init__(self):
         self.symbols_dict = {
-            "\\subsection*": FormatSymbol("$1=1$", "$1 \\neq 1$"),
+            "\\section*": FormatSymbol("\\#h2s", "\\#h2e"),
+            "\\subsection*": FormatSymbol("\\#h3s","\\#h3e")
         }
     
     def run(self, latex: str) -> str:
         for key, value in self.symbols_dict.items():
-            # run some semblance of input validation
-            stack = False
-            for i in range(len(latex)):
-                if i+len(value.START) < len(latex) and latex[i:i+len(value.START)] == value.START:
-                    if stack == True:
-                      return ''
-                    stack = True
-                elif i+len(value.STOP) < len(latex) and latex[i:i+len(value.STOP)] == value.STOP:
-                    if stack == False:
-                      return ''
-                    stack = False
-            if stack:
-                return ''
+            # # run some semblance of input validation
+            # stack = False
+            # for i in range(len(latex)):
+            #     if i+len(value.START) < len(latex) and latex[i:i+len(value.START)] == value.START:
+            #         if stack == True:
+            #           return ''
+            #         stack = True
+            #     elif i+len(value.STOP) < len(latex) and latex[i:i+len(value.STOP)] == value.STOP:
+            #         if stack == False:
+            #           return ''
+            #         stack = False
+            # if stack:
+            #     return ''
 
             # so much can go wrong, but this is an mvp!
+            print(value.START)
             replace_start = latex.replace(value.START, key + "{")
             replace_end = replace_start.replace(value.STOP, "}")
             print("og", latex)
             print("rs", replace_start)
             print("re", replace_end)
 
-            print(replace_end)
-            return replace_end
+            latex = replace_end
+        return replace_end
         
 class TestRunner:
     def __init__(self, directory):
@@ -51,10 +53,10 @@ class TestRunner:
                 output = test_function(file_contents)
                 print(f"File: {file_name}\n Input: \n{file_contents}\n Output: \n{output}\n")
 
-directory = './tests/injection_tests'
-fi = FormatInjector()
-runner = TestRunner(directory)
-runner.run_tests(fi.run)
+# directory = './tests/injection_tests'
+# fi = FormatInjector()
+# runner = TestRunner(directory)
+# runner.run_tests(fi.run)
 
 
                 
